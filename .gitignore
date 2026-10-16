@@ -1,0 +1,14 @@
+# 依赖与构建产物
+node_modules/
+dist/
+coverage/
+*.local
+
+# 日志与临时文件
+*.log
+.DS_Store
+*.tmp
+*.swp
+
+# 地图数据：DataV GeoAtlas 资源仅供学习交流，未取得公开再分发许可，不纳入版本库
+examples/ecommerce/public/maps/
