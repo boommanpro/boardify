@@ -1,8 +1,10 @@
 # Boardify
 
-可维护的**数据大盘 / 数据看板 / 数据大屏**构建技能（Skill），技术栈固定为 **React + Vite + TypeScript + shadcn/ui + ECharts**，内置中国地图本地化、省市区下钻、强制交付验证与证据门禁。
+可维护的**数据大盘 / 数据看板 / 数据大屏**构建技能（Agent Skill），技术栈固定为 **React + Vite + TypeScript + shadcn/ui + ECharts**，内置中国地图本地化、省市区下钻、强制交付验证与证据门禁。
 
 面向“帮我做一个大盘 / 看板 / 大屏 / 地图下钻”类需求：把一次性 demo 变成可验证、可交付、可维护的前端工程。
+
+这是一个**标准 Agent Skill 仓库**：技能本体是自包含目录 `skills/boardify/`（含 `SKILL.md`、`references/`、`scripts/`、`assets/`），不绑定任何特定平台的安装路径，可按下方说明安装到 Trae、Claude Code 等支持 Agent Skills 的环境。
 
 ## 特性
 
@@ -17,32 +19,51 @@
 
 ```text
 boardify/
-├── SKILL.md                    # 技能入口：流程、固定边界、硬性规则、文件地图
-├── references/                 # 按需加载的知识库
-│   ├── requirements.md         # 需求契约 + 默认假设表
-│   ├── engineering.md          # 目录结构、职责分离、生命周期、安全部署
-│   ├── design-system.md        # 视觉契约、shadcn 接入、大屏 16:9、oklch 坑
-│   ├── echarts.md              # 选型矩阵、生命周期、option 模板、故障速查
-│   ├── china-maps.md           # DataV 事实、adcode 表、坐标表、下钻坑、许可门禁
-│   ├── ecommerce.md            # 电商单屏示例实践
-│   └── delivery-validation.md  # 14 项门禁、证据格式、自动化技巧、故障速查
-├── scripts/
-│   ├── init.mjs                # 复制 starter 到新工程
-│   ├── validate.mjs            # 技能链接 + 模板地图哈希/几何/树校验
-│   ├── verify.mjs              # 模板测试 + 构建（浏览器如实标未验证）
-│   └── fetch-maps.mjs          # DataV 地图本地化下载（哈希、清单、--learning-only）
-├── assets/
-│   ├── starter/                # 可运行模板（合成地图，非真实行政区）
-│   └── templates/              # 需求记录 / 验收记录 / 交付清单
-└── examples/ecommerce/         # 单屏电商大盘示例（本地真实地图、省市区下钻）
+├── README.md                    # 本文件：仓库说明与安装指南
+├── .gitignore
+├── skills/                      # 标准技能目录（anthropics/skills 布局）
+│   └── boardify/                # 技能本体：SKILL.md + references + scripts + assets
+│       ├── SKILL.md             # 技能入口：流程、固定边界、硬性规则、文件地图
+│       ├── references/          # 按需加载的知识库
+│       │   ├── requirements.md  # 需求契约 + 默认假设表
+│       │   ├── engineering.md   # 目录结构、职责分离、生命周期、安全部署
+│       │   ├── design-system.md # 视觉契约、shadcn 接入、大屏 16:9、oklch 坑
+│       │   ├── echarts.md       # 选型矩阵、生命周期、option 模板、故障速查
+│       │   ├── china-maps.md    # DataV 事实、adcode 表、坐标表、下钻坑、许可门禁
+│       │   ├── ecommerce.md     # 电商单屏示例实践
+│       │   └── delivery-validation.md  # 14 项门禁、证据格式、自动化技巧、故障速查
+│       ├── scripts/
+│       │   ├── init.mjs         # 复制 starter 到新工程
+│       │   ├── validate.mjs     # 技能链接 + 模板地图哈希/几何/树校验
+│       │   ├── verify.mjs       # 模板测试 + 构建（浏览器如实标未验证）
+│       │   └── fetch-maps.mjs   # DataV 地图本地化下载（哈希、清单、--learning-only）
+│       └── assets/
+│           ├── starter/         # 可运行模板（合成地图，非真实行政区）
+│           └── templates/       # 需求记录 / 验收记录 / 交付清单
+└── examples/
+    └── ecommerce/               # 单屏电商大盘示例（本地真实地图、省市区下钻）
 ```
 
-## 快速开始
+## 安装（把技能装进你的 Agent）
 
-### 用模板新建大盘工程
+技能本体是 `skills/boardify/`，把它整个目录复制到目标平台能识别的 skills 目录即可：
+
+| 环境 | 安装位置 |
+| --- | --- |
+| Trae（项目级） | `<项目>/.trae/skills/boardify/` |
+| Trae（全局，CN） | `~/.trae-cn/skills/boardify/` |
+| Claude Code | `~/.claude/skills/boardify/` 或 `<项目>/.claude/skills/boardify/` |
+| 其他 Agent Skills 平台 | 按该平台约定，通常是 `<skills 根>/boardify/` |
+
+复制后确认 `SKILL.md` 位于技能目录顶层，且 `name: boardify` 与目录名一致。
+
+## 快速开始（使用技能）
+
+技能被触发后由 Agent 按 `SKILL.md` 执行。手动在终端使用其脚本：
 
 ```sh
-# 在 boardify 技能目录执行，目标为新的空目录
+# 用模板新建大盘工程（在 skills/boardify 目录执行）
+cd skills/boardify
 node scripts/init.mjs /absolute/path/to/dashboard
 cd /absolute/path/to/dashboard
 npm ci
@@ -54,19 +75,21 @@ npm run dev
 地图资源从 DataV GeoAtlas 下载到工程 `public/maps/`，运行时只从本地加载：
 
 ```sh
-node scripts/fetch-maps.mjs /absolute/path/to/dashboard --learning-only
+node skills/boardify/scripts/fetch-maps.mjs /absolute/path/to/dashboard --learning-only
 ```
 
-`--learning-only` 仅声明学习用途，不代表获得授权。地图许可与合规要求见 `references/china-maps.md`。
+`--learning-only` 仅声明学习用途，不代表获得授权。地图许可与合规要求见 `skills/boardify/references/china-maps.md`。
 
 ### 强制验证
 
 ```sh
+cd skills/boardify
 node scripts/validate.mjs     # 技能链接 + 模板地图完整性
 node scripts/verify.mjs       # 模板测试 + 构建
-npm test                      # 目标工程单元测试
-npm run build                 # 目标工程类型检查 + 生产构建
-npm run test:browser          # 目标工程真实浏览器回归
+# 目标工程内：
+npm test                      # 单元测试
+npm run build                 # 类型检查 + 生产构建
+npm run test:browser          # 真实浏览器回归
 ```
 
 ## 电商示例
@@ -79,7 +102,7 @@ npm ci
 npm run dev
 ```
 
-地图资源因许可限制不随仓库分发，需要本地运行 `node ../.trae/skills/boardify/scripts/fetch-maps.mjs ./ --learning-only` 获取；回归脚本的证据见 `docs/evidence/`。
+地图资源因许可限制不随仓库分发，需要本地运行 `node ../../skills/boardify/scripts/fetch-maps.mjs ./ --learning-only` 获取；回归脚本的证据见 `docs/evidence/`。
 
 ## 地图合规说明
 
@@ -97,4 +120,4 @@ npm run dev
 
 ## 许可
 
-技能文档与代码遵循仓库声明许可；地图与示例数据许可、审图合规须另行确认，详见 `references/china-maps.md`。未走完适用门禁的交付一律保持“受阻”状态，不宣称验收完成。
+技能文档与代码遵循仓库声明许可；地图与示例数据许可、审图合规须另行确认，详见 `skills/boardify/references/china-maps.md`。未走完适用门禁的交付一律保持“受阻”状态，不宣称验收完成。
