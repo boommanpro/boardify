@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"云港片区","id":"north-harbor"},"geometry":{"type":"Polygon","coordinates":[[[0,0],[0,5],[3,6],[4,3],[3,0],[0,0]]]}},{"type":"Feature","properties":{"name":"青丘片区","id":"north-hill"},"geometry":{"type":"Polygon","coordinates":[[[3,0],[4,3],[3,6],[7,5],[8,1],[3,0]]]}}]}

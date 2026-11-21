@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  skill:
+    name: 技能完整性校验
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 校验技能链接与模板地图资产
+        working-directory: skills/boardify
+        run: node scripts/validate.mjs
+
+  starter:
+    name: 模板工程（lint / test / build）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: skills/boardify/assets/starter/package-lock.json
+      - name: 安装依赖
+        working-directory: skills/boardify/assets/starter
+        run: npm ci
+      - name: lint
+        working-directory: skills/boardify/assets/starter
+        run: npm run lint
+      - name: test
+        working-directory: skills/boardify/assets/starter
+        run: npm test
+      - name: build（含类型检查）
+        working-directory: skills/boardify/assets/starter
+        run: npm run build
+
+  ecommerce:
+    name: 电商示例（test / build）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/ecommerce/package-lock.json
+      - name: 安装依赖
+        working-directory: examples/ecommerce
+        run: npm ci
+      - name: test
+        working-directory: examples/ecommerce
+        run: npm test
+      - name: build（含类型检查）
+        working-directory: examples/ecommerce
+        run: npm run build
+
+  agriculture:
+    name: 农业示例（test / build）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/agriculture/package-lock.json
+      - name: 安装依赖
+        working-directory: examples/agriculture
+        run: npm ci
+      - name: test
+        working-directory: examples/agriculture
+        run: npm test
+      - name: build（含类型检查）
+        working-directory: examples/agriculture
+        run: npm run build

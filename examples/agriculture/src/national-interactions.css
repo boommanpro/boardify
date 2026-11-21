@@ -1,0 +1,19 @@
+.view-control{font:inherit;color:inherit;letter-spacing:inherit;border:0;background:none;padding:0;cursor:pointer}
+button:focus-visible,select:focus-visible,.province:focus-visible{outline:2px solid #d7bd7d;outline-offset:4px}
+.province[role="button"]{cursor:pointer}
+.province[role="button"]:hover,.province:focus-visible{fill:#e1c98d}
+.interaction-panel{position:absolute;left:56px;bottom:78px;padding:20px;background:#0a2628;border:1px solid #9eaf8c80;z-index:5;display:grid;gap:16px;font-size:14px}
+.interaction-panel button,.interaction-panel select,.regional button,.regional select{font:inherit;background:#0a2628;color:#eeeadd;border:1px solid #9eaf8c45;padding:6px 12px;cursor:pointer}
+.interaction-panel [role="group"]{display:flex;gap:10px}
+.interaction-panel button[aria-pressed="true"]{color:#d7bd7d;border-color:#d7bd7d}
+.regional .agri-map{position:absolute;inset:95px 20px 20px;display:flex;flex-direction:column;gap:8px}
+.regional [data-slot="card-header"]{display:none}
+.regional [data-slot="card-content"]{display:flex;flex-direction:column;flex:1;min-height:0;gap:8px}
+.regional .map-stage{flex:1;min-height:0;position:relative}
+.regional .map-nav{display:flex;gap:8px;align-items:center}
+.regional .map-nav svg{width:14px;height:14px;display:inline}
+.regional .map-legend{display:flex;gap:12px;font-size:12px;color:#91a899}
+.regional .map-legend i{width:120px;background:linear-gradient(90deg,#21434b,#618783,#dbb96c)}
+.regional .region-picker{display:flex;align-items:center;gap:12px;font-size:12px}
+.regional .map-note{position:static;margin:0;font-size:11px;letter-spacing:1px}
+.regional .map-status{position:absolute;top:0;z-index:3;background:#0a2628;padding:12px}

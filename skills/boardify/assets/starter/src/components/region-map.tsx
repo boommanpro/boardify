@@ -24,6 +24,8 @@ export function RegionMap({ theme, loader = loadMap }: { theme: Theme; loader?: 
   const loading = pending || (!data && !error)
   useEffect(() => {
     const token = ++sequence.current
+    // 竞态隔离模式：切换地图时先同步重置状态，再异步加载，用 token 丢弃过期响应
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPending(true)
     setError('')
     setLoaded(null)
@@ -34,6 +36,8 @@ export function RegionMap({ theme, loader = loadMap }: { theme: Theme; loader?: 
     }).catch((reason: unknown) => {
       if (token === sequence.current) setError(reason instanceof Error ? reason.message : '地图加载失败')
     }).finally(() => { if (token === sequence.current) setPending(false) })
+    // cleanup 递增 token 是刻意为之：使未完成的旧请求失效，非引用 DOM 节点
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => { sequence.current++ }
   }, [id, attempt, loader])
   const option = useMemo<EChartsOption>(() => ({

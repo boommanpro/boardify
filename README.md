@@ -20,7 +20,8 @@
 ```text
 boardify/
 ├── README.md                    # 本文件：仓库说明与安装指南
-├── .gitignore
+├── LICENSE                      # MIT（地图等第三方数据除外，见文末例外说明）
+├── .github/workflows/ci.yml     # CI：技能校验 + 各工程 lint / test / build
 ├── skills/                      # 标准技能目录（anthropics/skills 布局）
 │   └── boardify/                # 技能本体：SKILL.md + references + scripts + assets
 │       ├── SKILL.md             # 技能入口：流程、固定边界、硬性规则、文件地图
@@ -35,13 +36,14 @@ boardify/
 │       ├── scripts/
 │       │   ├── init.mjs         # 复制 starter 到新工程
 │       │   ├── validate.mjs     # 技能链接 + 模板地图哈希/几何/树校验
-│       │   ├── verify.mjs       # 模板测试 + 构建（浏览器如实标未验证）
+│       │   ├── verify.mjs       # 模板 lint/test/build（浏览器如实标未验证）
 │       │   └── fetch-maps.mjs   # DataV 地图本地化下载（哈希、清单、--learning-only）
 │       └── assets/
 │           ├── starter/         # 可运行模板（合成地图，非真实行政区）
 │           └── templates/       # 需求记录 / 验收记录 / 交付清单
 └── examples/
-    └── ecommerce/               # 单屏电商大盘示例（本地真实地图、省市区下钻）
+    ├── ecommerce/               # 单屏电商大盘示例（本地真实地图、省市区下钻）
+    └── agriculture/             # 全国农业 16:9 数据大屏示例（省市区下钻、缩放平移）
 ```
 
 ## 安装（把技能装进你的 Agent）
@@ -115,9 +117,10 @@ npm run dev
 
 技能自带校验流水线，且诚实区分“自动化通过”与“浏览器验收”：
 
-- `validate.mjs` / `verify.mjs`：模板 17 项测试 + 类型检查 + 生产构建，浏览器证据如实标“未验证”。
+- `validate.mjs` / `verify.mjs`：模板 lint + 17 项测试 + 类型检查 + 生产构建，浏览器证据如实标“未验证”。
 - 电商示例：7 项业务测试 + 真实 Chromium 三尺寸浏览器回归（2560 / 1920 / 1366，含下钻、异常恢复、全屏、阻断外网本地加载）。
+- CI：`.github/workflows/ci.yml` 在推送与 PR 时自动执行技能校验及三个工程的 lint / test / build。
 
 ## 许可
 
-技能文档与代码遵循仓库声明许可；地图与示例数据许可、审图合规须另行确认，详见 `skills/boardify/references/china-maps.md`。未走完适用门禁的交付一律保持“受阻”状态，不宣称验收完成。
+技能文档与代码基于 [LICENSE](LICENSE)（MIT）分发；地图与示例数据许可、审图合规须另行确认，详见 `skills/boardify/references/china-maps.md`。未走完适用门禁的交付一律保持“受阻”状态，不宣称验收完成。

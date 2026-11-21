@@ -80,12 +80,13 @@ node scripts/verify.mjs
 目标工程至少执行：
 
 ```sh
+npm run lint
 npm test
 npm run build
 npm run preview
 ```
 
-构建包含 TypeScript 检查；模板尚无独立 lint 命令，不声称 lint 已通过。需要静态规范检查时补充配置并实际执行。
+构建包含 TypeScript 检查；`npm run lint` 提供 ESLint 静态检查（含 react-hooks 规则）。仓库 CI 在推送时自动执行技能校验与各工程的 lint / test / build。
 
 生产预览启动成功后，使用可用浏览器能力验证可见图表、真实点击、键盘、主题、视口、下钻和返回，核查控制台与网络。地图冷启动需允许本地服务且阻断外网；不得用断开本地服务来代替该测试。无浏览器能力时记录受阻，不以单元测试替代真实渲染。
 
@@ -95,6 +96,8 @@ npm run preview
 所有适用强制门禁通过才写“已完成并验证”；否则列出通过、失败、受阻及不适用项目和解除条件。保留构建体积警告、数据范围与地图覆盖限制，不隐藏它们。
 
 ## 文件地图
+
+技能安装后是自包含目录，以下均为技能目录内路径：
 
 ```
 boardify/
@@ -110,10 +113,11 @@ boardify/
 ├── scripts/
 │   ├── init.mjs                # 复制 starter 到新工程
 │   ├── validate.mjs            # 技能链接 + 模板地图哈希/几何/树校验
-│   ├── verify.mjs              # 模板测试 + 构建（浏览器如实标未验证）
+│   ├── verify.mjs              # 模板 lint/test/build（浏览器如实标未验证）
 │   └── fetch-maps.mjs          # DataV 地图本地化下载（含哈希、清单、--learning-only）
-├── assets/
-│   ├── starter/                # 可运行模板（合成地图，非真实行政区）
-│   └── templates/              # 需求记录 / 验收记录 / 交付清单
-└── examples/ecommerce/         # 单屏电商大盘示例（本地真实地图、省市区下钻）
+└── assets/
+    ├── starter/                # 可运行模板（合成地图，非真实行政区）
+    └── templates/              # 需求记录 / 验收记录 / 交付清单
 ```
+
+仓库级示例（`examples/ecommerce`、`examples/agriculture`）不属于技能目录，安装后不存在。

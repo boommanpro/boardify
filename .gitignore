@@ -10,5 +10,8 @@ coverage/
 *.tmp
 *.swp
 
+# 设计视觉稿等一次性中间产物
+design-preview/
+
 # 地图数据：DataV GeoAtlas 资源仅供学习交流，未取得公开再分发许可，不纳入版本库
-examples/ecommerce/public/maps/
+**/public/maps/

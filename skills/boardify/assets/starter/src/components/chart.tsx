@@ -6,8 +6,9 @@ type Props = { option: EChartsOption; theme: Theme; label: string; height?: numb
 export function Chart({ option, theme, label, height = 280, onSelect }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const callback = useRef(onSelect)
-  callback.current = onSelect
+  useEffect(() => { callback.current = onSelect })
   useEffect(() => {
+    // 容器 ref 由下方 JSX 绑定，effect 首次执行时必然已挂载；ECharts 初始化的标准挂载模式
     if (!container.current) return
     const instance = echarts.init(container.current, undefined, { renderer: 'svg' })
     instance.setOption({ ...option, backgroundColor: 'transparent' })
