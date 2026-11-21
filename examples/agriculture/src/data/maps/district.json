@@ -1,1 +1,0 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"核心服务网格","id":"grid-a"},"geometry":{"type":"Polygon","coordinates":[[[0,0],[0,4],[3,5],[4,2],[3,0],[0,0]]]}},{"type":"Feature","properties":{"name":"拓展服务网格","id":"grid-b"},"geometry":{"type":"Polygon","coordinates":[[[3,0],[4,2],[3,5],[7,4],[7,1],[3,0]]]}}]}

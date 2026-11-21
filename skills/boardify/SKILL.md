@@ -62,7 +62,7 @@ npm run dev
 
 真实中国区域常含 MultiPolygon。接入前扩展运行时校验器、类型与测试，禁止丢弃岛屿或强转 Polygon。行政区代码按字符串保存；未知子级不生成边界。资源覆盖不足时禁用对应下钻并说明原因。
 
-真实业务接入前读取 [电商示例实践](references/ecommerce.md)。仓库 `examples/ecommerce` 是独立本地学习示例，不是获准公开发布的地图包。采集脚本必须显式指定目标目录及 `--learning-only`，不得覆盖 starter；该参数只声明用途，不产生授权。源属性码与 series.name 均须统一为字符串，并验证色阶及真实图形点击，不能只验收行政区按钮。
+真实业务接入前读取 [电商示例实践](references/ecommerce.md)。完整示例工程维护于仓库 `examples` 分支（`examples/ecommerce` 单屏电商大盘、`examples/agriculture` 农业大屏），在线演示见 GitHub Pages；本分支技能目录内不含示例工程。示例采集脚本必须显式指定目标目录及 `--learning-only`，不得覆盖 starter；该参数只声明用途，不产生授权。源属性码与 series.name 均须统一为字符串，并验证色阶及真实图形点击，不能只验收行政区按钮。
 
 ## 4. 强制验证
 
@@ -120,4 +120,4 @@ boardify/
     └── templates/              # 需求记录 / 验收记录 / 交付清单
 ```
 
-仓库级示例（`examples/ecommerce`、`examples/agriculture`）不属于技能目录，安装后不存在。
+仓库级示例工程维护于 `examples` 分支（技能目录内不含示例，安装后仅本地图所示内容）。

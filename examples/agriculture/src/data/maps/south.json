@@ -1,1 +1,0 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"星湖片区","id":"south-lake"},"geometry":{"type":"Polygon","coordinates":[[[0,1],[1,5],[4,6],[3,3],[4,0],[0,1]]]}},{"type":"Feature","properties":{"name":"南苑片区","id":"south-garden"},"geometry":{"type":"Polygon","coordinates":[[[4,0],[3,3],[4,6],[8,4],[7,0],[4,0]]]}}]}

@@ -21,7 +21,7 @@
 boardify/
 ├── README.md                    # 本文件：仓库说明与安装指南
 ├── LICENSE                      # MIT（地图等第三方数据除外，见文末例外说明）
-├── .github/workflows/ci.yml     # CI：技能校验 + 各工程 lint / test / build
+├── .github/workflows/ci.yml     # CI：技能完整性校验 + starter lint / test / build
 ├── skills/                      # 标准技能目录（anthropics/skills 布局）
 │   └── boardify/                # 技能本体：SKILL.md + references + scripts + assets
 │       ├── SKILL.md             # 技能入口：流程、固定边界、硬性规则、文件地图
@@ -41,9 +41,7 @@ boardify/
 │       └── assets/
 │           ├── starter/         # 可运行模板（合成地图，非真实行政区）
 │           └── templates/       # 需求记录 / 验收记录 / 交付清单
-└── examples/
-    ├── ecommerce/               # 单屏电商大盘示例（本地真实地图、省市区下钻）
-    └── agriculture/             # 全国农业 16:9 数据大屏示例（省市区下钻、缩放平移）
+└── examples 分支                # 示例工程独立维护，见下文“示例与在线演示”
 ```
 
 ## 安装（把技能装进你的 Agent）
@@ -94,32 +92,38 @@ npm run build                 # 类型检查 + 生产构建
 npm run test:browser          # 真实浏览器回归
 ```
 
-## 电商示例
+## 示例与在线演示
 
-`examples/ecommerce` 是一个**仅首屏**的电商经营大盘：顶部经营指标、中央本地中国地图（省市区下钻）、两侧趋势 / 渠道 / 转化 / 品类 / 履约，适配 2560×1440、1920×1080、1366×768。
+示例工程不在本分支，维护于 `examples` 分支，push 时由 deploy-pages workflow 自动构建并发布到 GitHub Pages：
+
+- **在线演示**：<https://boommanpro.github.io/boardify/>
+- **电商单屏经营大盘**：顶部经营指标、中央本地中国地图（省市区下钻）、两侧趋势 / 渠道 / 转化 / 品类 / 履约，适配 2560×1440、1920×1080、1366×768。
+- **全国农业数据大屏**：16:9 定屏等比缩放，全国 → 省 → 市 → 区县逐级下钻，滚轮缩放与拖动平移。
+
+本地运行示例：
 
 ```sh
-cd examples/ecommerce
+git checkout examples
+cd examples/ecommerce        # 或 examples/agriculture
 npm ci
+node ../../skills/boardify/scripts/fetch-maps.mjs . --learning-only   # 地图资源不随仓库分发，本地获取
 npm run dev
 ```
-
-地图资源因许可限制不随仓库分发，需要本地运行 `node ../../skills/boardify/scripts/fetch-maps.mjs ./ --learning-only` 获取；回归脚本的证据见 `docs/evidence/`。
 
 ## 地图合规说明
 
 - 地图源为阿里云 DataV.GeoAtlas（areas_v3，版本 2021.5），**仅供学习交流**，未取得商用、修改、公开再分发许可。
 - 中国地图必须完整（含台湾、含南海诸岛九段线）；识别 `100000_JD` 附属要素并保留，不裁剪、不删除。
 - 行政区码与城市坐标只准来自内置表或 GeoJSON `properties`，禁止凭记忆编造。
-- 推送到公开仓库前，请自行确认地图再分发许可；本仓库不包含实际地图资源文件。
+- 本分支不包含实际地图资源文件；`examples` 分支的在线演示以学习展示为目的发布构建产物，许可范围有限，商用场景请自行取得授权。
 
 ## 验证与测试
 
 技能自带校验流水线，且诚实区分“自动化通过”与“浏览器验收”：
 
 - `validate.mjs` / `verify.mjs`：模板 lint + 17 项测试 + 类型检查 + 生产构建，浏览器证据如实标“未验证”。
-- 电商示例：7 项业务测试 + 真实 Chromium 三尺寸浏览器回归（2560 / 1920 / 1366，含下钻、异常恢复、全屏、阻断外网本地加载）。
-- CI：`.github/workflows/ci.yml` 在推送与 PR 时自动执行技能校验及三个工程的 lint / test / build。
+- CI：`.github/workflows/ci.yml` 在推送与 PR 时自动执行技能校验及 starter 的 lint / test / build。
+- 示例工程的测试与三尺寸浏览器回归（2560 / 1920 / 1366，含下钻、异常恢复、全屏、阻断外网本地加载）在 `examples` 分支上运行，证据随示例维护。
 
 ## 许可
 

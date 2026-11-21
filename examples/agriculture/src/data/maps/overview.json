@@ -1,1 +1,0 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"北部示范区","id":"north"},"geometry":{"type":"Polygon","coordinates":[[[0,4],[1,8],[4,9],[7,8],[8,5],[5,4],[3,5],[0,4]]]}},{"type":"Feature","properties":{"name":"南部示范区","id":"south"},"geometry":{"type":"Polygon","coordinates":[[[0,4],[3,5],[5,4],[8,5],[9,2],[6,0],[2,1],[0,4]]]}}]}
