@@ -15,14 +15,28 @@ starter 已按下列分层组织，新工程沿用而不重排。已有项目保
 ```text
 src/
 ├── components/
-│   ├── ui/            # shadcn 生成组件
+│   ├── ui/            # shadcn 生成组件（button/card/table/select/tabs/progress 等）
 │   ├── chart.tsx      # 统一 ECharts 容器（尺寸观察/事件/销毁）
 │   ├── region-map.tsx # 地图下钻组件（或按项目命名）
-│   └── layout/        # 页头、筛选栏、面包屑（有需要时）
-├── lib/               # echarts 注册入口、图表配置、地图/工具函数
+│   ├── kpi-card.tsx   # KPI 数字卡（方向 + 好坏 tone + sparkline + progress）
+│   ├── chart-card.tsx # 图表卡片（含可展开数据表）
+│   ├── filter-bar.tsx # 筛选栏（字段配置驱动，共享筛选状态入口）
+│   ├── page-header.tsx    # 页头（标题/描述/操作区）
+│   ├── data-table.tsx     # 明细表（排序/空态/数字列）
+│   ├── sparkline.tsx      # 内联 SVG 迷你趋势线
+│   ├── status-block.tsx   # loading/empty/error 统一展示
+│   ├── palette-switch.tsx # 色板运行时切换器（按需挂载）
+│   └── big-screen/        # ScreenFrame（16:9 缩放）+ Panel（大屏面板）
+├── lib/
+│   ├── charts.ts      # echarts 按需注册入口（套件全集，业务裁剪）
+│   ├── chart-theme.ts # 语义令牌 → ECharts 安全颜色（oklch 防御、兜底）
+│   ├── options.ts     # 图表配置工厂（baseOption、buildXxxOption）
+│   └── maps.ts        # 地图清单/校验/加载与工具函数
 ├── data/              # 数据层：唯一数据出口；mock 与真实接口同构可切换
+│   ├── source.ts      # query 函数 + DATA_SOURCE 切换点
 │   └── maps/          # 地图清单与（本地资源在 public/ 下）
-├── hooks/             # 主题、尺寸等共享逻辑
+├── hooks/             # 主题（use-theme）、色板（use-palette）、图表令牌（use-chart-theme）、
+│                      # 自动刷新（use-auto-refresh）、大屏缩放（use-screen-scale）
 ├── test/              # 单元测试
 ├── App.tsx / main.tsx / index.css
 public/maps/           # 本地 GeoJSON（fetch-maps.mjs 下载，运行时禁止外网）

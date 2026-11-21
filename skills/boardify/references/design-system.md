@@ -6,6 +6,23 @@
 
 调研图谱描述了极简、企业中台、Material、Fluent、玻璃拟态等风格。这里采纳其“分开比较组件生态与视觉风格”的方法，不照抄整页卡片布局，不将趋势描述作为客观排名。
 
+## 品牌色预设（按场景选定）
+
+品牌色默认是工程级决策：按业务场景选定一个预设，写入 `index.html` 的 `<html data-palette="...">`，全工程生效。明暗模式运行时切换（`.dark` 类 + localStorage 持久化）。用户色板偏好可经 starter 的 `usePalette` 在运行时覆盖并持久化（`PaletteSwitch` 组件）；不需要给最终用户选色板的工程直接不挂载切换器，色板仍由 index.html 决定——覆盖不改变工程默认，图表经 `useChartTheme(theme, palette)` 在色板切换时重取令牌。
+
+| 预设 | 气质与适用场景 |
+| --- | --- |
+| green（默认） | 自然、可信：运营、农业、公共事务 |
+| blue | 稳健、企业级：政务、金融、集团经营 |
+| amber | 警觉、能量：工业、能源、监控告警 |
+| violet | 科技、创新：互联网产品、增长分析 |
+| neutral | 中性灰：高数据密度场景，图表色承担全部色彩表达 |
+| teal | 清爽、疗愈：医疗、健康、公共卫生 |
+| rose | 活力、亲和：零售、消费、营销活动 |
+| midnight | 深空蓝 + 青色点缀：数据大屏、指挥中心（深色为主） |
+
+预设之外的定制品牌色：只改对应 `[data-palette]` 变量块的 hex 值（明暗两组），不改组件与图表代码；新增预设须同步 `index.css`、`hooks/use-palette.ts` 的 PALETTES/PALETTE_OPTIONS 与本表，并提供明暗两套、chart-1..5 色板与 chart-fill 地图低端色，按 G-07 在明暗模式下分别截图验证。
+
 ## 视觉契约
 
 实施前记录主风格、颜色角色、字体、间距、圆角、阴影、密度、图表调色板和响应策略。以下为无品牌约束时的建议起点，确定后全局一致使用。
@@ -39,22 +56,16 @@ Web 看板默认：页面标题与筛选行、KPI 区、主分析区，采用语
 
 图表高度给在卡片内容区上（如 `h-[300px]`），统一图表组件撑满；flex 布局里放图表必须加 `min-h-0`，否则高度塌陷图表空白。单屏大屏看板另按下方大屏模式组织。
 
+组件选型就低不就高：单个指标现在多少用 `KpiCard` 数字卡（趋势一眼可辨加 `Sparkline` 内联 SVG，不为迷你线建 ECharts 实例）；离目标多远用 `KpiCard` 的 `Progress`，只有用户明确要仪表盘才用图表实现；加载/空/失败统一 `StatusBlock`，明细表统一 `DataTable`（数字列右对齐等宽），不在页面手写一套。
+
 ## 大屏模式（16:9 定屏）
 
-用户明确说“大屏／指挥中心／投屏／值守”时采用此模式，与 Web 看板（响应式）分开设计。设计稿固定 1920×1080，外层按视口等比缩放：
+用户明确说“大屏／指挥中心／投屏／值守”时采用此模式，与 Web 看板（响应式）分开设计。设计稿固定 1920×1080，外层按视口等比缩放。starter 已内置该模式：`ScreenFrame`（等比缩放 + 强制深色，dark 类加在根元素上与 chart-theme 令牌读取一致）与 `Panel`（克制的标题栏 + 主色顶线面板），不要在业务代码里重写缩放逻辑：
 
 ```tsx
-function useScreenScale() {
-  const [scale, setScale] = useState(1)
-  useEffect(() => {
-    const fit = () => setScale(Math.min(innerWidth / 1920, innerHeight / 1080))
-    fit()
-    addEventListener('resize', fit)
-    return () => removeEventListener('resize', fit)
-  }, [])
-  return scale
-}
-// <div style={{ width: 1920, height: 1080, transform: `scale(${scale})`, transformOrigin: 'center top' }} className="dark" />
+<ScreenFrame title="全国农业数据驾驶舱">
+  <Panel title="区域排行">…</Panel>
+</ScreenFrame>
 ```
 
 - 根元素强制 `dark`；科技感来自图表配色与少量点缀（如 `shadow-[0_0_24px_hsl(var(--primary)/0.3)]`），不滥用装饰渐变与霓虹。
@@ -64,10 +75,10 @@ function useScreenScale() {
 
 ## 令牌与 shadcn 接入
 
-- 使用 background/foreground、card/card-foreground、primary/primary-foreground、muted/muted-foreground、border、input、ring 及 chart-1 至 chart-5 等语义令牌；明暗主题复用名称而不是各写一套组件。
-- 为成功、警告、危险、无数据增加语义角色；不要假定增长总为绿色，成本上升等业务必须明确好坏方向。
+- 使用 background/foreground、card/card-foreground、popover/popover-foreground、primary/primary-foreground、muted/muted-foreground、border、input、ring 及 chart-1 至 chart-5、chart-fill 等语义令牌；明暗主题复用名称而不是各写一套组件。
+- 为成功、警告、危险、无数据增加语义角色（starter 内置 --success/--warning/--destructive）；不要假定增长总为绿色，成本上升等业务必须明确好坏方向。
 - shadcn 当前主题文档采用 CSS 变量并展示 OKLCH；旧项目可能使用不同格式，先查变量值和 Tailwind 版本，禁止重复套 hsl()。
-- **OKLCH 与 ECharts 兼容坑**：新主题令牌是 `oklch(...)`，zrender（ECharts 底层）对 visualMap 插值、渐变等可能无法可靠解析，轻则色带失效、重则填黑。对策：在 `index.css` 用 hex 覆盖 `--chart-1..5`（明暗各一套），或在图表适配层做 `toSafeColor`（canvas fillStyle 往返转换）防御，转不过来时回退到兜底色板。
+- **OKLCH 与 ECharts 兼容坑**：新主题令牌是 `oklch(...)`，zrender（ECharts 底层）对 visualMap 插值、渐变等可能无法可靠解析，轻则色带失效、重则填黑。starter 的对策已内置：令牌全部使用 hex，且 `lib/chart-theme.ts` 的 `toSafeColor` 做 canvas fillStyle 往返转换防御，转换失败回退兜底色板。业务代码只消费 `resolveChartTheme()` / `useChartTheme()` 的结果，禁止裸写颜色字面量。
 - 不强制旧项目切换原语库。所读取的 Chart 文档提供 Radix UI 与 Base UI 入口，接入时必须核实实际生成组件与依赖。
 - shadcn 的 Chart 基于 Recharts，不是 ECharts 容器。采用 ECharts 时复用面板、筛选、令牌和信息层级，独立实现 ECharts 适配层，不为视觉一致而安装 Recharts。
 - 不把 CSS var(...) 原样视为 Canvas 可解析颜色；按 echarts.md 转换为已验证的颜色值。

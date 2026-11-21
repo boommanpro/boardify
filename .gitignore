@@ -15,3 +15,5 @@ design-preview/
 
 # 地图数据：DataV GeoAtlas 资源仅供学习交流，未取得公开再分发许可，不纳入版本库
 **/public/maps/
+
+.zcode

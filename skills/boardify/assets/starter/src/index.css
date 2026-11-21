@@ -2,9 +2,239 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root { --background: #f4f6f3; --foreground: #1a2925; --card: #ffffff; --card-foreground: #1a2925; --primary: #24644b; --primary-foreground: #ffffff; --secondary: #e9eee9; --secondary-foreground: #294537; --muted: #edf1ed; --muted-foreground: #6b7a73; --accent: #e6ede7; --accent-foreground: #1a2925; --destructive: #b33d38; --border: #dce4dc; --input: #dce4dc; --ring: #33825c; --radius: 0.75rem; --chart-text: #65786f; --chart-line: #e4eae4; --chart-fill: #e4eee7; }
-.dark { --background: #101917; --foreground: #e6eee8; --card: #16221f; --card-foreground: #e6eee8; --primary: #b8e48b; --primary-foreground: #17231b; --secondary: #22352c; --secondary-foreground: #d6e7d9; --muted: #1e3028; --muted-foreground: #93a79b; --accent: #293d31; --accent-foreground: #e6eee8; --destructive: #f18b80; --border: #2c3d34; --input: #2c3d34; --ring: #b8e48b; --chart-text: #93a79b; --chart-line: #293c32; --chart-fill: #243c30; }
-@theme inline { --color-background: var(--background); --color-foreground: var(--foreground); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground); --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground); --color-destructive: var(--destructive); --color-border: var(--border); --color-input: var(--input); --color-ring: var(--ring); --radius-sm: calc(var(--radius) - 4px); --radius-md: calc(var(--radius) - 2px); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) + 4px); }
+/*
+ * 品牌色预设：按业务场景在 index.html 的 <html data-palette="..."> 选定工程默认，全工程生效。
+ * 候选：green（默认）/ blue / amber / violet / neutral / teal / rose / midnight；
+ * 用户偏好可在运行时经 use-palette 覆盖（持久化到 localStorage）。
+ * 明暗模式由 .dark 类在运行时切换。
+ * 令牌全部为 hex：ECharts/zrender 对 oklch() 等格式解析不可靠（见 references/design-system.md）。
+ */
+
+/* green：默认。自然、可信，适合运营、农业、公共事务 */
+:root {
+  --background: #f4f6f3; --foreground: #1a2925; --card: #ffffff; --card-foreground: #1a2925;
+  --popover: #ffffff; --popover-foreground: #1a2925;
+  --primary: #24644b; --primary-foreground: #ffffff;
+  --secondary: #e9eee9; --secondary-foreground: #294537;
+  --muted: #edf1ed; --muted-foreground: #6b7a73;
+  --accent: #e6ede7; --accent-foreground: #1a2925;
+  --destructive: #b33d38; --success: #2e7d4f; --warning: #b07908;
+  --border: #dce4dc; --input: #dce4dc; --ring: #33825c;
+  --chart-1: #34815b; --chart-2: #7fb069; --chart-3: #e0a458; --chart-4: #d66853; --chart-5: #5b8e7d;
+  --chart-fill: #d4e8cf;
+  --radius: 0.75rem;
+}
+:root.dark, .dark {
+  --background: #101917; --foreground: #e6eee8; --card: #16221f; --card-foreground: #e6eee8;
+  --popover: #16221f; --popover-foreground: #e6eee8;
+  --primary: #b8e48b; --primary-foreground: #17231b;
+  --secondary: #22352c; --secondary-foreground: #d6e7d9;
+  --muted: #1e3028; --muted-foreground: #93a79b;
+  --accent: #293d31; --accent-foreground: #e6eee8;
+  --destructive: #f18b80; --success: #7cc784; --warning: #e5b567;
+  --border: #2c3d34; --input: #2c3d34; --ring: #b8e48b;
+  --chart-1: #b8e48b; --chart-2: #7cc784; --chart-3: #e5b567; --chart-4: #e78a7a; --chart-5: #8fd0b2;
+  --chart-fill: #294a3a;
+}
+
+/* blue：政务、金融、企业级 */
+[data-palette="blue"] {
+  --background: #f4f6f9; --foreground: #17222e; --card: #ffffff; --card-foreground: #17222e;
+  --popover: #ffffff; --popover-foreground: #17222e;
+  --primary: #1e5aa8; --primary-foreground: #ffffff;
+  --secondary: #e9eef4; --secondary-foreground: #243447;
+  --muted: #edf1f5; --muted-foreground: #64707e;
+  --accent: #e6edf5; --accent-foreground: #17222e;
+  --destructive: #c03d3d; --success: #237a4b; --warning: #a86e08;
+  --border: #d9e0e8; --input: #d9e0e8; --ring: #2563eb;
+  --chart-1: #2563eb; --chart-2: #38bdf8; --chart-3: #818cf8; --chart-4: #f59e0b; --chart-5: #10b981;
+  --chart-fill: #d5e4f8;
+}
+.dark[data-palette="blue"] {
+  --background: #0f141b; --foreground: #e2e9f2; --card: #151c26; --card-foreground: #e2e9f2;
+  --popover: #151c26; --popover-foreground: #e2e9f2;
+  --primary: #6ea8fe; --primary-foreground: #0d1520;
+  --secondary: #1c2632; --secondary-foreground: #c9d6e4;
+  --muted: #1a2330; --muted-foreground: #8c99a8;
+  --accent: #223040; --accent-foreground: #e2e9f2;
+  --destructive: #f18b80; --success: #7cc784; --warning: #e5b567;
+  --border: #28323f; --input: #28323f; --ring: #6ea8fe;
+  --chart-1: #6ea8fe; --chart-2: #4dd0e1; --chart-3: #a5b4fc; --chart-4: #fbbf24; --chart-5: #34d399;
+  --chart-fill: #1d3350;
+}
+
+/* amber：工业、能源、告警场景 */
+[data-palette="amber"] {
+  --background: #faf7f2; --foreground: #262019; --card: #ffffff; --card-foreground: #262019;
+  --popover: #ffffff; --popover-foreground: #262019;
+  --primary: #b45309; --primary-foreground: #ffffff;
+  --secondary: #f0e9dc; --secondary-foreground: #453827;
+  --muted: #f3efe7; --muted-foreground: #756b5c;
+  --accent: #f1e9db; --accent-foreground: #262019;
+  --destructive: #b33d38; --success: #2e7d4f; --warning: #b07908;
+  --border: #e5ddcf; --input: #e5ddcf; --ring: #d97706;
+  --chart-1: #d97706; --chart-2: #84cc16; --chart-3: #0ea5e9; --chart-4: #dc2626; --chart-5: #8b5cf6;
+  --chart-fill: #f3e2c3;
+}
+.dark[data-palette="amber"] {
+  --background: #171310; --foreground: #f0e9dd; --card: #1f1a15; --card-foreground: #f0e9dd;
+  --popover: #1f1a15; --popover-foreground: #f0e9dd;
+  --primary: #fbbf24; --primary-foreground: #241a05;
+  --secondary: #2a241c; --secondary-foreground: #e3d5bd;
+  --muted: #262019; --muted-foreground: #a99e8c;
+  --accent: #322a20; --accent-foreground: #f0e9dd;
+  --destructive: #f18b80; --success: #7cc784; --warning: #fbbf24;
+  --border: #383026; --input: #383026; --ring: #fbbf24;
+  --chart-1: #fbbf24; --chart-2: #a3e635; --chart-3: #38bdf8; --chart-4: #f87171; --chart-5: #a78bfa;
+  --chart-fill: #4a3a14;
+}
+
+/* violet：科技、互联网、创新业务 */
+[data-palette="violet"] {
+  --background: #f7f6fa; --foreground: #221d2e; --card: #ffffff; --card-foreground: #221d2e;
+  --popover: #ffffff; --popover-foreground: #221d2e;
+  --primary: #6d28d9; --primary-foreground: #ffffff;
+  --secondary: #ebe7f2; --secondary-foreground: #3a2d55;
+  --muted: #f0eef5; --muted-foreground: #6f6880;
+  --accent: #ece7f5; --accent-foreground: #221d2e;
+  --destructive: #c03d3d; --success: #237a4b; --warning: #a86e08;
+  --border: #e0dce8; --input: #e0dce8; --ring: #7c3aed;
+  --chart-1: #7c3aed; --chart-2: #d946ef; --chart-3: #0ea5e9; --chart-4: #f59e0b; --chart-5: #10b981;
+  --chart-fill: #e4d9f8;
+}
+.dark[data-palette="violet"] {
+  --background: #131019; --foreground: #eae6f2; --card: #1a1622; --card-foreground: #eae6f2;
+  --popover: #1a1622; --popover-foreground: #eae6f2;
+  --primary: #b79df5; --primary-foreground: #1c1030;
+  --secondary: #241e30; --secondary-foreground: #d5cbe8;
+  --muted: #201a2b; --muted-foreground: #9a92ab;
+  --accent: #2a2338; --accent-foreground: #eae6f2;
+  --destructive: #f18b80; --success: #7cc784; --warning: #e5b567;
+  --border: #322a42; --input: #322a42; --ring: #b79df5;
+  --chart-1: #b79df5; --chart-2: #f0abfc; --chart-3: #4dd0e1; --chart-4: #fbbf24; --chart-5: #34d399;
+  --chart-fill: #37245c;
+}
+
+/* neutral：中性灰，强数据密度场景，图表色承担全部色彩表达 */
+[data-palette="neutral"] {
+  --background: #f7f7f6; --foreground: #1c1c1e; --card: #ffffff; --card-foreground: #1c1c1e;
+  --popover: #ffffff; --popover-foreground: #1c1c1e;
+  --primary: #3f3f46; --primary-foreground: #ffffff;
+  --secondary: #ececea; --secondary-foreground: #333336;
+  --muted: #f0f0ee; --muted-foreground: #6e6e6a;
+  --accent: #eaeae6; --accent-foreground: #1c1c1e;
+  --destructive: #b33d38; --success: #2e7d4f; --warning: #b07908;
+  --border: #e0e0dc; --input: #e0e0dc; --ring: #52525b;
+  --chart-1: #52525b; --chart-2: #0ea5e9; --chart-3: #f59e0b; --chart-4: #dc2626; --chart-5: #10b981;
+  --chart-fill: #e2e2e0;
+}
+.dark[data-palette="neutral"] {
+  --background: #141415; --foreground: #ececea; --card: #1b1b1c; --card-foreground: #ececea;
+  --popover: #1b1b1c; --popover-foreground: #ececea;
+  --primary: #e4e4e7; --primary-foreground: #18181b;
+  --secondary: #252527; --secondary-foreground: #d9d9d6;
+  --muted: #222224; --muted-foreground: #9b9b97;
+  --accent: #2a2a2c; --accent-foreground: #ececea;
+  --destructive: #f18b80; --success: #7cc784; --warning: #fbbf24;
+  --border: #303032; --input: #303032; --ring: #e4e4e7;
+  --chart-1: #d4d4d8; --chart-2: #4dd0e1; --chart-3: #fbbf24; --chart-4: #f87171; --chart-5: #34d399;
+  --chart-fill: #3a3a3d;
+}
+
+/* teal：医疗、健康、公共卫生 */
+[data-palette="teal"] {
+  --background: #f2f8f7; --foreground: #142725; --card: #ffffff; --card-foreground: #142725;
+  --popover: #ffffff; --popover-foreground: #142725;
+  --primary: #0d7377; --primary-foreground: #ffffff;
+  --secondary: #e3efee; --secondary-foreground: #1f3d3a;
+  --muted: #ecf4f3; --muted-foreground: #647a77;
+  --accent: #e0efed; --accent-foreground: #142725;
+  --destructive: #b33d38; --success: #2e7d4f; --warning: #b07908;
+  --border: #d6e4e2; --input: #d6e4e2; --ring: #0f8388;
+  --chart-1: #0f8388; --chart-2: #4fb3bf; --chart-3: #7fb069; --chart-4: #e0a458; --chart-5: #8b7ec8;
+  --chart-fill: #cfe9e6;
+}
+.dark[data-palette="teal"] {
+  --background: #0d1719; --foreground: #e2eeec; --card: #132225; --card-foreground: #e2eeec;
+  --popover: #132225; --popover-foreground: #e2eeec;
+  --primary: #66d9c8; --primary-foreground: #0c1a18;
+  --secondary: #1d3231; --secondary-foreground: #c8e2de;
+  --muted: #1a2c2b; --muted-foreground: #8fa8a4;
+  --accent: #223a38; --accent-foreground: #e2eeec;
+  --destructive: #f18b80; --success: #7cc784; --warning: #e5b567;
+  --border: #29403e; --input: #29403e; --ring: #66d9c8;
+  --chart-1: #66d9c8; --chart-2: #4dd0e1; --chart-3: #b5e48c; --chart-4: #f5c66b; --chart-5: #90a8ed;
+  --chart-fill: #1f4a47;
+}
+
+/* rose：零售、消费、营销活动 */
+[data-palette="rose"] {
+  --background: #faf5f4; --foreground: #2b1c1a; --card: #ffffff; --card-foreground: #2b1c1a;
+  --popover: #ffffff; --popover-foreground: #2b1c1a;
+  --primary: #be3455; --primary-foreground: #ffffff;
+  --secondary: #f4e6e3; --secondary-foreground: #4a2b28;
+  --muted: #f6ece9; --muted-foreground: #7c6b67;
+  --accent: #f5e5e1; --accent-foreground: #2b1c1a;
+  --destructive: #b33d38; --success: #2e7d4f; --warning: #b07908;
+  --border: #ecdcd7; --input: #ecdcd7; --ring: #c94f6d;
+  --chart-1: #c94f6d; --chart-2: #e0a458; --chart-3: #38a3a5; --chart-4: #8b6fc4; --chart-5: #6cae75;
+  --chart-fill: #f6d9d3;
+}
+.dark[data-palette="rose"] {
+  --background: #1a1113; --foreground: #f3e6e3; --card: #241619; --card-foreground: #f3e6e3;
+  --popover: #241619; --popover-foreground: #f3e6e3;
+  --primary: #f2a0ae; --primary-foreground: #2b1218;
+  --secondary: #362024; --secondary-foreground: #e8d3d3;
+  --muted: #2f1c20; --muted-foreground: #ab9296;
+  --accent: #3d2429; --accent-foreground: #f3e6e3;
+  --destructive: #f18b80; --success: #7cc784; --warning: #e5b567;
+  --border: #452c31; --input: #452c31; --ring: #f2a0ae;
+  --chart-1: #f2a0ae; --chart-2: #f5c66b; --chart-3: #52c5c7; --chart-4: #b79df5; --chart-5: #8fd0a0;
+  --chart-fill: #4f2733;
+}
+
+/* midnight：大屏、指挥中心（深空蓝 + 青色点缀，深色为主） */
+[data-palette="midnight"] {
+  --background: #f2f5fb; --foreground: #101a36; --card: #ffffff; --card-foreground: #101a36;
+  --popover: #ffffff; --popover-foreground: #101a36;
+  --primary: #1e50c8; --primary-foreground: #ffffff;
+  --secondary: #e4eaf6; --secondary-foreground: #22315e;
+  --muted: #eef2f9; --muted-foreground: #64749b;
+  --accent: #e3ebf8; --accent-foreground: #101a36;
+  --destructive: #b33d38; --success: #2e7d4f; --warning: #b07908;
+  --border: #d8e0ef; --input: #d8e0ef; --ring: #1e50c8;
+  --chart-1: #1e50c8; --chart-2: #0ea5e9; --chart-3: #8b5cf6; --chart-4: #14b8a6; --chart-5: #f59e0b;
+  --chart-fill: #d7e4fb;
+}
+.dark[data-palette="midnight"] {
+  --background: #0b1226; --foreground: #dce6f5; --card: #101a36; --card-foreground: #dce6f5;
+  --popover: #101a36; --popover-foreground: #dce6f5;
+  --primary: #4cc9f0; --primary-foreground: #071022;
+  --secondary: #1a2748; --secondary-foreground: #c3d4f0;
+  --muted: #16213e; --muted-foreground: #7f93b8;
+  --accent: #1d2c52; --accent-foreground: #dce6f5;
+  --destructive: #ff6b6b; --success: #4ade80; --warning: #fbbf24;
+  --border: #233458; --input: #233458; --ring: #4cc9f0;
+  --chart-1: #4cc9f0; --chart-2: #539bf5; --chart-3: #b78cf7; --chart-4: #38e1c6; --chart-5: #f4a259;
+  --chart-fill: #14284a;
+}
+
+@theme inline {
+  --color-background: var(--background); --color-foreground: var(--foreground);
+  --color-card: var(--card); --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover); --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive); --color-success: var(--success); --color-warning: var(--warning);
+  --color-border: var(--border); --color-input: var(--input); --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1); --color-chart-2: var(--chart-2); --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4); --color-chart-5: var(--chart-5); --color-chart-fill: var(--chart-fill);
+  --radius-sm: calc(var(--radius) - 4px); --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius); --radius-xl: calc(var(--radius) + 4px);
+}
+
 * { border-color: var(--border); }
 body { margin: 0; background: var(--background); color: var(--foreground); font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; }
 button { cursor: pointer; }

@@ -16,8 +16,10 @@
 
 ## 特性
 
-- **工程化**：可运行的模板工程，锁文件保证依赖可复现，ESLint + 类型检查 + 测试内建。
-- **图表标准化**：统一 ECharts 封装（尺寸观察、事件解绑、销毁），内置选型矩阵与 option 模板。
+- **场景配方**：经营看板 / 指挥大屏 / 运维监控 / 增长分析 / 物流地域 / 人力财务六大配方，组件块 × 图表工厂 × 配色一键组合，字段替换即成业务看板。
+- **看板组件套件**：PageHeader、FilterBar、KpiCard（迷你趋势/目标进度）、ChartCard、DataTable、StatusBlock、RegionMap 与大屏 ScreenFrame/Panel，全走语义令牌。
+- **多品牌色**：green / blue / amber / violet / neutral / teal / rose / midnight 八套明暗双模预设，按业务场景一行选定，用户偏好可运行时切换；图表颜色经令牌适配层自动联动。
+- **图表标准化**：统一 ECharts 封装（尺寸观察、事件解绑、销毁），内置趋势/排行/占比/堆叠/热力/散点/雷达/漏斗/仪表/地图打点飞线 option 工厂与选型矩阵。
 - **国产化地图**：DataV GeoAtlas 本地资源化，运行时零外网依赖；内置 34 省 adcode 权威表与实测事实，防止模型编造边界。
 - **多级下钻**：全国 → 省 → 市 → 区县逐级下钻，面包屑返回、失败重试、请求竞态隔离。
 - **强制交付验证**：14 项证据门禁（G-01 ~ G-14），未走完验证流水线不得声称"完成"。
@@ -45,6 +47,7 @@ cd /absolute/path/to/dashboard && npm ci && npm run dev
 | --- | --- |
 | [SKILL.md](skills/boardify/SKILL.md) | 技能入口：流程、固定边界、硬性规则 |
 | [references/](skills/boardify/references/) | 需求契约、工程规范、设计系统、ECharts、中国地图、交付验证 |
+| [场景配方](skills/boardify/references/scenarios.md) | 六大场景的组件 × 图表 × 配色组合约定 |
 | [China Maps 规范](skills/boardify/references/china-maps.md) | 地图来源、许可门禁与防乱答事实表 |
 
 ## 许可

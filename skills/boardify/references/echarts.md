@@ -2,7 +2,7 @@
 
 ## 版本与模块
 
-先记录实际安装版本、锁文件和适用官方文档；不得把 v5 升级说明当作当前版本声明。优先按需引入 echarts/core、需要的图表、组件与渲染器，再调用 use 注册。
+先记录实际安装版本、锁文件和适用官方文档；不得把 v5 升级说明当作当前版本声明。优先按需引入 echarts/core、需要的图表、组件与渲染器，再调用 use 注册。starter 的 `lib/charts.ts` 为整套件注册了全部图表类型（折线/条形/饼/散点/雷达/热力/漏斗/仪表/地图/打点/飞线），业务工程删减未用的工厂时同步删减注册项，减小产物体积。
 
 | 用途 | 必须核对的模块 |
 | --- | --- |
@@ -56,15 +56,16 @@
 
 ## option 底座与模板
 
-每个 option 工厂合并一份底座，保证整页 tooltip、legend、网格、边距观感一致；option 一律 `useMemo`，生成函数（工厂）放图表配置目录，数据从数据层取：
+每个 option 工厂合并一份底座，保证整页 tooltip、legend、网格、边距观感一致；option 一律 `useMemo`，生成函数（工厂）放 `lib/options.ts`，数据从数据层取。颜色参数一律来自 `useChartTheme(theme, palette)`（见 design-system.md 的令牌规则），下列模板中的 `theme` 即其返回值。starter 已实现选型矩阵的全部常用工厂：`buildTrendOption`（多系列折线）、`buildRankOption`、`buildShareOption`、`buildStackedBarOption`、`buildHeatmapOption`、`buildScatterOption`（可作气泡）、`buildRadarOption`、`buildFunnelOption`（占比按首级口径）、`buildGaugeOption`（仅用户明确要求时）、`buildGeoOption` + `buildMapScatterSeries` / `buildMapLinesSeries`（地图叠加，规则见 china-maps.md）。缺的工厂按同一范式在同文件补建，不在组件里散写 option。底座范式：
 
 ```ts
-// 图表配置底座
-export const baseOption = {
+// 图表配置底座（starter 实现在 lib/options.ts，颜色来自 ChartTheme）
+export const baseOption = (theme: ChartTheme) => ({
+  textStyle: { color: theme.text },
   tooltip: { trigger: 'axis', confine: true }, // confine：防止 tooltip 被卡片裁掉
-  legend: { top: 0 },
+  legend: { top: 0, textStyle: { color: theme.text } },
   grid: { left: 8, right: 16, top: 36, bottom: 8, containLabel: true },
-}
+})
 ```
 
 趋势折线（含 dataZoom）：
@@ -113,7 +114,7 @@ export function buildShareOption(rows) {
 
 ## 主题适配
 
-从当前元素的计算样式读取设计令牌，解析为目标渲染器已经验证的具体颜色；必要时统一转换为 RGB／十六进制。只读取到 oklch(...) 字符串不代表当前 ECharts／zrender 版本支持该格式。记录转换策略并检查明暗主题、截图和导出一致性。
+从当前元素的计算样式读取设计令牌，解析为目标渲染器已经验证的具体颜色——starter 已内置该适配层：`lib/chart-theme.ts` 的 `resolveChartTheme()` 读取语义令牌、`toSafeColor` 做 canvas 往返转换并在失败时回退兜底色板；`useChartTheme(mode)` 在明暗切换后重新解析。只读取到 oklch(...) 字符串不代表当前 ECharts／zrender 版本支持该格式。接入新工程时保留这条链路，不要把令牌读取散落在各图表里。
 
 文字、轴线、网格、浮层、选中与无数据样式全部走语义角色。series 顺序变化不能让同一业务实体换色。动画服从减少动态效果偏好，大数据不启用无意义循环动画。
 
