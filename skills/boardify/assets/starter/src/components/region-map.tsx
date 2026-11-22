@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowLeft, MapPin } from 'lucide-react'
 import { Chart } from '@/components/chart'
 import { Button } from '@/components/ui/button'
@@ -6,12 +6,15 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { echarts, type EChartsOption } from '@/lib/charts'
+import { useChartTheme } from '@/hooks/use-chart-theme'
 import { breadcrumbs, getChild, getNode, loadMap, rootId, type MapData } from '@/lib/maps'
-import { regionValue } from '@/data/metrics'
+import { regionValue, type Filters } from '@/data/source'
 import type { Theme } from '@/hooks/use-theme'
 
-export function RegionMap({ theme, loader = loadMap }: { theme: Theme; loader?: typeof loadMap }) {
+export function RegionMap({ theme, filters, loader = loadMap }: { theme: Theme; filters?: Filters; loader?: typeof loadMap }) {
+  const chartTheme = useChartTheme(theme)
   const [id, setId] = useState(rootId)
   const [loaded, setLoaded] = useState<{ id: string; map: MapData } | null>(null)
   const [pending, setPending] = useState(true)
@@ -40,11 +43,22 @@ export function RegionMap({ theme, loader = loadMap }: { theme: Theme; loader?: 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => { sequence.current++ }
   }, [id, attempt, loader])
+  const values = useMemo(() => data?.features.map(feature => regionValue(feature.properties.id, filters)) ?? [], [data, filters])
   const option = useMemo<EChartsOption>(() => ({
-    tooltip: { trigger: 'item', renderMode: 'richText', formatter: '{b}：{c} 单' },
-    visualMap: { min: 120, max: 920, show: false, inRange: { color: theme === 'dark' ? ['#294a3a', '#b8e48b'] : ['#d4e8cf', '#34815b'] } },
-    series: [{ type: 'map', map: `boardify-${id}`, roam: false, selectedMode: false, label: { show: true, color: theme === 'dark' ? '#f3f9ef' : '#183b29', fontSize: 13 }, itemStyle: { borderColor: theme === 'dark' ? '#16221f' : '#ffffff', borderWidth: 4 }, emphasis: { label: { color: '#142b1c' }, itemStyle: { areaColor: '#d3e7a5' } }, data: data?.features.map(feature => ({ name: feature.properties.name, value: regionValue(feature.properties.id) })) ?? [] }],
-  }), [data, id, theme])
+    tooltip: { trigger: 'item', confine: true, formatter: '{b}：{c} 单' },
+    visualMap: {
+      min: Math.min(...values, 0), max: Math.max(...values, 1), show: false,
+      inRange: { color: [chartTheme.mapFrom, chartTheme.primary] },
+    },
+    series: [{
+      type: 'map', map: `boardify-${id}`, roam: false, selectedMode: false,
+      label: { show: true, color: chartTheme.foreground, fontSize: 13 },
+      itemStyle: { borderColor: chartTheme.surface, borderWidth: 4 },
+      emphasis: { label: { color: chartTheme.foreground }, itemStyle: { areaColor: chartTheme.palette[2] } },
+      // name 必须与 geojson properties.name 一致；值关联走 properties.id，不用展示名当业务键
+      data: data?.features.map((feature, index) => ({ name: feature.properties.name, value: values[index] })) ?? [],
+    }],
+  }), [data, id, values, chartTheme])
   function navigate(next: string) { setNotice(''); setId(next) }
   function select(name: string) {
     if (loading || !data) return
@@ -53,11 +67,25 @@ export function RegionMap({ theme, loader = loadMap }: { theme: Theme; loader?: 
     if (!node.children.length) { setNotice('已到第三级，当前区域没有下级地图。'); return }
     try { navigate(getChild(id, feature.properties.id).id) } catch (reason) { setError((reason as Error).message) }
   }
+  const path = breadcrumbs(id)
   return <Card>
     <CardHeader><div className="flex flex-wrap items-center justify-between gap-3"><CardTitle>区域服务分布</CardTitle><Badge variant="secondary">第 {node.level} / 3 级</Badge></div><CardDescription>本地合成地图 · 非真实行政区划 · 点击区域下钻</CardDescription></CardHeader>
     <CardContent>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <nav aria-label="地图路径" className="flex flex-wrap gap-1">{breadcrumbs(id).map(item => <Button key={item.id} variant="ghost" size="sm" aria-current={item.id === id ? 'location' : undefined} disabled={item.id === id} onClick={() => navigate(item.id)}>{item.name}</Button>)}</nav>
+        <Breadcrumb aria-label="地图路径">
+          <BreadcrumbList>
+            {path.map((item, index) => (
+              <Fragment key={item.id}>
+                {index > 0 && <BreadcrumbSeparator />}
+                <BreadcrumbItem>
+                  {item.id === id
+                    ? <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                    : <Button variant="ghost" size="sm" onClick={() => navigate(item.id)}>{item.name}</Button>}
+                </BreadcrumbItem>
+              </Fragment>
+            ))}
+          </BreadcrumbList>
+        </Breadcrumb>
         <Button variant="outline" size="sm" disabled={!node.parent} onClick={() => node.parent && navigate(node.parent)}><ArrowLeft data-icon="inline-start" />返回上级</Button>
       </div>
       <div aria-live="polite" aria-busy={loading}>

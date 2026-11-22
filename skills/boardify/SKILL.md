@@ -25,13 +25,14 @@ description: 构建可维护的 React 与 Vite 数据大盘，统一 shadcn/ui�
 5. **UI 只用 shadcn/ui + Tailwind**，不混入其他组件库；混库必然样式分裂。
 6. **所有图表走统一封装**（resize/dispose/事件/色板已处理）；散落的 `echarts.init` 会造成内存泄漏与 resize 失效。
 7. **数据层抽离为唯一数据出口**，mock 与真实数据同构可切换；否则接真实数据时全页面重写。
+8. **颜色只准来自语义令牌与 chart-theme 适配层**（`lib/chart-theme.ts`），业务代码与 option 工厂禁止裸写颜色字面量；品牌色按业务场景从内置预设选定（green/blue/amber/violet/neutral/teal/rose/midnight，见 design-system.md），明暗模式运行时切换，用户色板偏好可经 use-palette 运行时覆盖并持久化。
 
 ## 1. 确认需求
 
 读取 [需求规范](references/requirements.md)，复制 [需求记录](assets/templates/requirements.md) 到目标工程文档目录并填实。
 优先用选项询问尚未明确的阻塞问题，不重复询问已提供的信息。确认交付形态、数据来源、指标定义、图表、主题、分辨率、刷新与交互、地图范围、网络限制和验收标准。真实数据或地图缺失时先确认是否接受标明来源的演示模式。
 
-区分交付形态：**Web 看板**（响应式，亮暗可切换）与**数据大屏**（16:9 定屏等比缩放，深色，见 [设计系统](references/design-system.md) 的“大屏模式”）。用户说“大屏／指挥中心／投屏／值守”时按大屏处理；单屏看板以目标分辨率无滚动、无裁切为首屏验收条件，两者分开设计，不混用。
+区分交付形态：**Web 看板**（响应式，亮暗可切换）与**数据大屏**（16:9 定屏等比缩放，深色，见 [设计系统](references/design-system.md) 的“大屏模式”）。用户说“大屏／指挥中心／投屏／值守”时按大屏处理；单屏看板以目标分辨率无滚动、无裁切为首屏验收条件，两者分开设计，不混用。业务形态命中常见场景（经营看板／指挥大屏／运维监控／增长分析／物流地域／人力财务）时按 [场景配方](references/scenarios.md) 组合组件与图表工厂，配方不是需求，字段一律替换为业务口径。
 
 ## 2. 建立工程
 
@@ -54,7 +55,7 @@ npm run dev
 
 ## 3. 实现图表和地图
 
-读取 [ECharts 规范](references/echarts.md)。沿用模板图表容器，保持尺寸观察、主题重建、事件解绑及销毁；给关键指标提供可访问的数据替代，不以 Canvas 元素存在作为图表正确的证据。
+读取 [ECharts 规范](references/echarts.md)。沿用模板图表容器，保持尺寸观察、主题重建、事件解绑及销毁；option 一律用 starter 的 `lib/options.ts` 工厂（趋势/排行/占比/堆叠/热力/散点/雷达/漏斗/仪表/地图叠加），缺的在同文件补建工厂而不是散写 option；给关键指标提供可访问的数据替代，不以 Canvas 元素存在作为图表正确的证据。
 
 涉及地图必须读取 [中国地图规范](references/china-maps.md)。先建立来源、许可、版本、坐标系、哈希与层级清单，再接入几何和业务数据。模板只有明确标记的三级合成 Polygon 示例，不包含真实中国地图，不证明真实行政区覆盖能力。
 
@@ -62,7 +63,7 @@ npm run dev
 
 真实中国区域常含 MultiPolygon。接入前扩展运行时校验器、类型与测试，禁止丢弃岛屿或强转 Polygon。行政区代码按字符串保存；未知子级不生成边界。资源覆盖不足时禁用对应下钻并说明原因。
 
-真实业务接入前读取 [电商示例实践](references/ecommerce.md)。仓库 `examples/ecommerce` 是独立本地学习示例，不是获准公开发布的地图包。采集脚本必须显式指定目标目录及 `--learning-only`，不得覆盖 starter；该参数只声明用途，不产生授权。源属性码与 series.name 均须统一为字符串，并验证色阶及真实图形点击，不能只验收行政区按钮。
+真实业务接入前读取 [电商示例实践](references/ecommerce.md)。完整示例工程维护于仓库 `examples` 分支（`examples/ecommerce` 单屏电商大盘、`examples/agriculture` 农业大屏），在线演示见 GitHub Pages；本分支技能目录内不含示例工程。示例采集脚本必须显式指定目标目录及 `--learning-only`，不得覆盖 starter；该参数只声明用途，不产生授权。源属性码与 series.name 均须统一为字符串，并验证色阶及真实图形点击，不能只验收行政区按钮。
 
 ## 4. 强制验证
 
@@ -105,8 +106,9 @@ boardify/
 ├── references/
 │   ├── requirements.md         # 需求契约 + 默认假设表（不为问而问）
 │   ├── engineering.md          # 目录结构、职责分离、生命周期、安全部署
-│   ├── design-system.md        # 视觉契约、shadcn 接入、大屏 16:9、oklch 坑
+│   ├── design-system.md        # 视觉契约、品牌色预设、shadcn 接入、大屏 16:9、oklch 坑
 │   ├── echarts.md              # 选型矩阵、封装生命周期、option 模板、故障速查
+│   ├── scenarios.md            # 六大场景配方：组件块 × 图表工厂 × 配色组合约定
 │   ├── china-maps.md           # DataV 事实、adcode 表、坐标表、下钻坑、许可门禁
 │   ├── ecommerce.md            # 电商单屏示例实践与追加运行检查
 │   └── delivery-validation.md  # 14 项门禁、证据格式、自动化技巧、故障速查
@@ -120,4 +122,4 @@ boardify/
     └── templates/              # 需求记录 / 验收记录 / 交付清单
 ```
 
-仓库级示例（`examples/ecommerce`、`examples/agriculture`）不属于技能目录，安装后不存在。
+仓库级示例工程维护于 `examples` 分支（技能目录内不含示例，安装后仅本地图所示内容）。

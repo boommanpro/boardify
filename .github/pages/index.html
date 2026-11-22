@@ -17,7 +17,7 @@
     color: #e8eaed;
     padding: 24px;
   }
-  main { max-width: 640px; width: 100%; }
+  main { max-width: 720px; width: 100%; }
   h1 { font-size: 22px; font-weight: 600; letter-spacing: 0.5px; }
   .lead { margin-top: 10px; font-size: 14px; color: #9aa0a6; line-height: 1.7; }
   .cards { margin-top: 28px; display: flex; flex-direction: column; gap: 12px; }
@@ -40,7 +40,7 @@
 <body>
 <main>
   <h1>Boardify 示例演示</h1>
-  <p class="lead">以下页面由 <strong>boardify</strong> 数据大盘构建技能生成，全部为模拟演示数据。示例源码维护于仓库 <code>examples</code> 分支。</p>
+  <p class="lead">以下页面由 <strong>boardify</strong> 数据大盘构建技能生成，覆盖 Web 看板与定屏大屏两类形态、八套配色与场景配方，全部为模拟演示数据。示例源码维护于仓库 <code>examples</code> 分支。</p>
   <div class="cards">
     <a class="card" href="./ecommerce/">
       <h2>电商单屏经营大盘</h2>
@@ -49,6 +49,18 @@
     <a class="card" href="./agriculture/">
       <h2>全国农业数据大屏</h2>
       <p>16:9 定屏等比缩放，全国 → 省 → 市 → 区县下钻，支持滚轮缩放与拖动平移。</p>
+    </a>
+    <a class="card" href="./ops-monitor/">
+      <h2>运维监控看板</h2>
+      <p>15 秒自动刷新、P50/P95 延迟双线、时段错误热力、分级告警明细；amber 配色，明暗可切换。</p>
+    </a>
+    <a class="card" href="./sales-growth/">
+      <h2>销售增长分析看板</h2>
+      <p>转化漏斗（首级口径）、新客留存矩阵、用户分层气泡、GMV 双线趋势；violet 配色，客群/周期联动筛选。</p>
+    </a>
+    <a class="card" href="./command-center/">
+      <h2>营销活动指挥大屏</h2>
+      <p>16:9 定屏（ScreenFrame 等比缩放）、midnight 科技配色、合成地图下钻、六维画像雷达，30 秒数据版本推进。</p>
     </a>
   </div>
   <footer>地图来源：阿里云 DataV.GeoAtlas（仅供学习交流使用，未取得商用与再分发许可）；演示数据不代表官方统计，不构成任何投资或经营建议。</footer>

@@ -1,0 +1,12 @@
+{
+  "root": "overview",
+  "nodes": [
+    { "id": "overview", "name": "全域", "level": 1, "parent": null, "asset": "overview", "children": ["north", "south"] },
+    { "id": "north", "name": "北部示范区", "level": 2, "parent": "overview", "asset": "north", "children": ["north-harbor", "north-hill"] },
+    { "id": "south", "name": "南部示范区", "level": 2, "parent": "overview", "asset": "south", "children": ["south-lake", "south-garden"] },
+    { "id": "north-harbor", "name": "云港片区", "level": 3, "parent": "north", "asset": "district", "children": [] },
+    { "id": "north-hill", "name": "青丘片区", "level": 3, "parent": "north", "asset": "district", "children": [] },
+    { "id": "south-lake", "name": "星湖片区", "level": 3, "parent": "south", "asset": "district", "children": [] },
+    { "id": "south-garden", "name": "南苑片区", "level": 3, "parent": "south", "asset": "district", "children": [] }
+  ]
+}

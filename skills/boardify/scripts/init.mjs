@@ -43,7 +43,7 @@ export async function initialize(target) {
   for (const entry of await readdir(source)) {
     await cp(resolve(source, entry), resolve(destination, entry), { recursive: true, force: false, errorOnExist: true, filter })
   }
-  console.log(`初始化成功：${destination}\n未复制依赖、构建产物、缓存或环境秘密；尚未安装依赖或验证浏览器。`)
+  console.log(`初始化成功：${destination}\n未复制依赖、构建产物、缓存或环境秘密；尚未安装依赖或验证浏览器。\n品牌色：按业务场景修改 index.html 的 <html data-palette="green">（green/blue/amber/violet/neutral/teal/rose/midnight，场景适配见 references/scenarios.md）。`)
   return destination
 }
 

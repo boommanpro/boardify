@@ -63,9 +63,72 @@ jobs:
           name: agriculture-dist
           path: examples/agriculture/dist
 
+  build-ops-monitor:
+    name: 构建运维监控示例
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/ops-monitor/package-lock.json
+      - name: 安装依赖
+        working-directory: examples/ops-monitor
+        run: npm ci
+      - name: 构建
+        working-directory: examples/ops-monitor
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ops-monitor-dist
+          path: examples/ops-monitor/dist
+
+  build-sales-growth:
+    name: 构建增长分析示例
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/sales-growth/package-lock.json
+      - name: 安装依赖
+        working-directory: examples/sales-growth
+        run: npm ci
+      - name: 构建
+        working-directory: examples/sales-growth
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sales-growth-dist
+          path: examples/sales-growth/dist
+
+  build-command-center:
+    name: 构建指挥大屏示例
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/command-center/package-lock.json
+      - name: 安装依赖
+        working-directory: examples/command-center
+        run: npm ci
+      - name: 构建
+        working-directory: examples/command-center
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: command-center-dist
+          path: examples/command-center/dist
+
   deploy:
     name: 部署 GitHub Pages
-    needs: [build-ecommerce, build-agriculture]
+    needs: [build-ecommerce, build-agriculture, build-ops-monitor, build-sales-growth, build-command-center]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -80,6 +143,18 @@ jobs:
         with:
           name: agriculture-dist
           path: site/agriculture
+      - uses: actions/download-artifact@v4
+        with:
+          name: ops-monitor-dist
+          path: site/ops-monitor
+      - uses: actions/download-artifact@v4
+        with:
+          name: sales-growth-dist
+          path: site/sales-growth
+      - uses: actions/download-artifact@v4
+        with:
+          name: command-center-dist
+          path: site/command-center
       - name: 生成索引页
         run: cp .github/pages/index.html site/index.html
       - uses: actions/upload-pages-artifact@v4

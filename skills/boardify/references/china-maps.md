@@ -126,13 +126,14 @@ starter 仅包含明确标记的三级合成 Polygon 示例，不含真实中国
 
 ```ts
 // 区域填色 + 下钻：必须用独立 map series，不用 geo 组件（见上方实测坑）
-export function buildRegionMapOption(code, rows, maxValue) {
+// theme 为 useChartTheme 的返回值；色阶只用其中已验证的 hex（mapFrom 低端、primary 高端）
+export function buildRegionMapOption(code, rows, maxValue, theme) {
   return {
     tooltip: { trigger: 'item', confine: true },
     visualMap: {
       left: 8, bottom: 8, min: 0, max: maxValue,
       text: ['高', '低'], calculable: true,
-      inRange: { color: ['hsl(var(--primary) / 0.15)', 'hsl(var(--primary))'] },
+      inRange: { color: [theme.mapFrom, theme.primary] },
     },
     series: [{
       type: 'map', map: code, roam: true,
@@ -144,7 +145,7 @@ export function buildRegionMapOption(code, rows, maxValue) {
 }
 ```
 
-- 只打点／飞线、无填色下钻：用 `geo: { map: adcode }` + `series: [{ type: 'effectScatter' / 'lines', coordinateSystem: 'geo' }]`。
+starter 的 `RegionMap` 组件即此模板的完整实现（含竞态隔离、面包屑、重试）。只打点／飞线、无填色下钻：用 starter 的 `buildGeoOption` + `buildMapScatterSeries` / `buildMapLinesSeries`（`coordinateSystem: 'geo'`）。
 - `visualMap` 与数据关联：series.data 的 `name` 必须等于要素 `properties.name`；行政区码则通过数据适配层映射，不能只用展示名当业务键。
 - 色阶插值颜色若用 oklch 无效，改用 hex（见 design-system.md 的 oklch 兼容坑）。
 

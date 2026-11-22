@@ -24,7 +24,7 @@ async function main() {
       async function check(name, region) {
         await page.getByRole('img', { name: `${region}合成服务地图`, exact: true }).locator('svg path').first().waitFor()
         await page.waitForTimeout(400)
-        assert.equal(await page.locator('[_echarts_instance_]').count(), 3)
+        assert.equal(await page.locator('[_echarts_instance_]').count(), 6) // 趋势/构成/排行/堆叠/热力 + 地图
         assert.equal(await page.locator('vite-error-overlay').count(), 0)
         const layout = await page.evaluate(() => ({
           viewport: innerWidth,
