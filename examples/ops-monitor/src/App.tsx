@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Activity, Moon, Pause, Play, Sun } from 'lucide-react'
+import { Activity, BellRing, Bug, Gauge, HeartPulse, Moon, Pause, Play, Sun } from 'lucide-react'
 import { useTheme } from '@/hooks/use-theme'
 import { usePalette } from '@/hooks/use-palette'
 import { useChartTheme } from '@/hooks/use-chart-theme'
@@ -28,6 +28,9 @@ import {
   type AlertRow,
   type Scope,
 } from '@/data/source'
+
+// KPI 图标与指标一一对应：可用率 / 延迟 / 错误率 / 告警
+const KPI_ICONS = [<HeartPulse key="avail" />, <Gauge key="lat" />, <Bug key="err" />, <BellRing key="alert" />]
 
 const FILTER_FIELDS: FilterField[] = [
   {
@@ -92,7 +95,7 @@ export default function App() {
     <header className="border-b bg-card">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-5 md:px-10">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Activity className="size-5" />
           </div>
           <span className="truncate text-xl font-semibold tracking-tight">OpsMonitor<span className="ml-3 hidden text-sm font-normal text-muted-foreground sm:inline">运维值守</span></span>
@@ -126,7 +129,7 @@ export default function App() {
       <FilterBar fields={FILTER_FIELDS} value={{ scope }} onChange={(key, next) => key === 'scope' && setScope(next as Scope)} />
 
       <section aria-label="服务健康" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {health.map((kpi, index) => <KpiCard key={kpi.label} {...kpi} tone={kpiTone(index)} />)}
+        {health.map((kpi, index) => <KpiCard key={kpi.label} {...kpi} tone={kpiTone(index)} icon={KPI_ICONS[index]} />)}
       </section>
 
       <section className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">

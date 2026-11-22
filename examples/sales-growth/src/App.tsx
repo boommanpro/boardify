@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { TrendingUp, Moon, Sun } from 'lucide-react'
+import { Moon, Repeat, Sun, Target, TrendingUp, Users, Wallet } from 'lucide-react'
 import { useTheme } from '@/hooks/use-theme'
 import { usePalette } from '@/hooks/use-palette'
 import { useChartTheme } from '@/hooks/use-chart-theme'
@@ -28,6 +28,9 @@ import {
   type Cohort,
   type Period,
 } from '@/data/source'
+
+// KPI 图标与指标一一对应：访客 / 转化率 / 客单价 / 复购率
+const KPI_ICONS = [<Users key="vis" />, <Target key="cvr" />, <Wallet key="aov" />, <Repeat key="rep" />]
 
 const PERIOD_TEXT: Record<Period, string> = { week: '本周', month: '本月', quarter: '本季' }
 const PERIOD_LABEL_TEXT: Record<Period, string> = { week: '较上周', month: '较上月', quarter: '较上季' }
@@ -101,7 +104,7 @@ export default function App() {
     <header className="border-b bg-card">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-5 md:px-10">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <TrendingUp className="size-5" />
           </div>
           <span className="truncate text-xl font-semibold tracking-tight">GrowthLens<span className="ml-3 hidden text-sm font-normal text-muted-foreground sm:inline">增长分析</span></span>
@@ -130,7 +133,7 @@ export default function App() {
       />
 
       <section aria-label="核心指标" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {kpis.map(kpi => <KpiCard key={kpi.label} {...kpi} />)}
+        {kpis.map((kpi, index) => <KpiCard key={kpi.label} {...kpi} icon={KPI_ICONS[index]} />)}
       </section>
 
       <section className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">

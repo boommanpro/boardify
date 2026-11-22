@@ -73,7 +73,7 @@
   --accent: #f1e9db; --accent-foreground: #262019;
   --destructive: #b33d38; --success: #2e7d4f; --warning: #b07908;
   --border: #e5ddcf; --input: #e5ddcf; --ring: #d97706;
-  --chart-1: #d97706; --chart-2: #84cc16; --chart-3: #0ea5e9; --chart-4: #dc2626; --chart-5: #8b5cf6;
+  --chart-1: #d97706; --chart-2: #84cc16; --chart-3: #0ea5e9; --chart-4: #8b5cf6; --chart-5: #dc2626;
   --chart-fill: #f3e2c3;
 }
 .dark[data-palette="amber"] {
@@ -85,7 +85,7 @@
   --accent: #322a20; --accent-foreground: #f0e9dd;
   --destructive: #f18b80; --success: #7cc784; --warning: #fbbf24;
   --border: #383026; --input: #383026; --ring: #fbbf24;
-  --chart-1: #fbbf24; --chart-2: #a3e635; --chart-3: #38bdf8; --chart-4: #f87171; --chart-5: #a78bfa;
+  --chart-1: #fbbf24; --chart-2: #a3e635; --chart-3: #38bdf8; --chart-4: #a78bfa; --chart-5: #f87171;
   --chart-fill: #4a3a14;
 }
 

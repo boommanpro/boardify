@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Radio } from 'lucide-react'
+import { Coins, Radio, Signal, Target, Users } from 'lucide-react'
 import { useAutoRefresh } from '@/hooks/use-auto-refresh'
 import { useChartTheme } from '@/hooks/use-chart-theme'
 import { Badge } from '@/components/ui/badge'
@@ -10,6 +10,9 @@ import { KpiCard } from '@/components/kpi-card'
 import { RegionMap } from '@/components/region-map'
 import { buildRadarOption, buildRankOption, buildShareOption, buildStackedBarOption, buildTrendOption } from '@/lib/options'
 import { RADAR_INDICATORS, dataSourceLabel, queryKpis, queryRadar, queryRank, queryShare, queryStacked, queryTrend } from '@/data/source'
+
+// KPI 图标与指标一一对应：GMV / 用户 / 转化率 / 实时在线
+const KPI_ICONS = [<Coins key="gmv" />, <Users key="users" />, <Target key="cvr" />, <Signal key="online" />]
 
 function formatClock(date: Date) {
   const pad = (value: number) => String(value).padStart(2, '0')
@@ -59,7 +62,7 @@ export default function App() {
     </header>
 
     <section aria-label="活动核心指标" className="grid shrink-0 grid-cols-4 gap-3">
-      {kpis.map(kpi => <KpiCard key={kpi.label} {...kpi} />)}
+      {kpis.map((kpi, index) => <KpiCard key={kpi.label} {...kpi} icon={KPI_ICONS[index]} />)}
     </section>
 
     <section className="grid min-h-0 flex-1 grid-cols-[300px_minmax(0,1fr)_300px] gap-3">

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { LayoutDashboard, Moon, Sun } from 'lucide-react'
+import { Activity, CheckCircle2, LayoutDashboard, Moon, Sun, Timer, Users } from 'lucide-react'
 import { useTheme } from '@/hooks/use-theme'
 import { usePalette } from '@/hooks/use-palette'
 import { useChartTheme } from '@/hooks/use-chart-theme'
@@ -37,6 +37,9 @@ import {
   type Period,
   type RegionRow,
 } from '@/data/source'
+
+// KPI 图标与指标一一对应：业务总量 / 完成率 / 活跃用户 / 处理时长
+const KPI_ICONS = [<Activity key="vol" />, <CheckCircle2 key="done" />, <Users key="users" />, <Timer key="hours" />]
 
 const PERIOD_TEXT: Record<Period, string> = { week: '本周', month: '本月', quarter: '本季' }
 const PERIOD_LABEL_TEXT: Record<Period, string> = { week: '较上周', month: '较上月', quarter: '较上季' }
@@ -110,7 +113,7 @@ export default function App() {
     <header className="border-b bg-card">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-5 md:px-10">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <LayoutDashboard className="size-5" />
           </div>
           <span className="truncate text-xl font-semibold tracking-tight">Boardify<span className="ml-3 hidden text-sm font-normal text-muted-foreground sm:inline">数据工作台</span></span>
@@ -144,6 +147,7 @@ export default function App() {
             key={kpi.label}
             {...kpi}
             tone={kpiTone(index)}
+            icon={KPI_ICONS[index]}
             sparkline={index === 0 ? { points: sparkline, color: chartTheme.primary } : undefined}
             progress={index === 1 ? { value: completion, label: '目标 98%' } : undefined}
           />

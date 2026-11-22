@@ -12,9 +12,14 @@ export function baseOption(theme: ChartTheme): EChartsOption {
   return {
     textStyle: { color: theme.text },
     tooltip: { trigger: 'axis', confine: true },
-    legend: { top: 0, textStyle: { color: theme.text } },
+    legend: { top: 0, icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { color: theme.text } },
     grid: { left: 8, right: 16, top: 36, bottom: 8, containLabel: true },
   }
+}
+
+/** 纵向渐变（hex 令牌 + 8 位透明度后缀，zrender 可靠解析）；用于面积/条形的精致化填充 */
+function fade(color: string, from: string, to: string) {
+  return { type: 'linear' as const, x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: color + from }, { offset: 1, color: color + to }] }
 }
 
 const axisStyle = (theme: ChartTheme) => ({
@@ -49,24 +54,32 @@ export function buildTrendOption(theme: ChartTheme, labels: string[], series: Se
         smooth: true,
         symbolSize: 6,
         data: item.values,
-        lineStyle: { width: 3, color },
+        lineStyle: { width: 3, color, shadowColor: color + '55', shadowBlur: series.length === 1 ? 8 : 0 },
         itemStyle: { color },
-        areaStyle: series.length === 1 ? { color: theme.primary, opacity: 0.12 } : undefined,
+        areaStyle: series.length === 1 ? { color: fade(theme.primary, '3d', '03') } : undefined,
       }
     }),
   }
 }
 
-/** 类别谁多谁少：条形，先排序，小值在下 */
+/** 类别谁多谁少：条形，先排序，小值在下；横向渐变 + 条端数值标签 */
 export function buildRankOption(theme: ChartTheme, rows: { name: string; value: number }[], name: string): EChartsOption {
   const sorted = [...rows].sort((a, b) => a.value - b.value)
   return {
     ...baseOption(theme),
     tooltip: { trigger: 'item', confine: true },
-    grid: { ...baseOption(theme).grid, bottom: 0 },
+    legend: { show: false },
+    grid: { ...baseOption(theme).grid, bottom: 0, right: 36 },
     xAxis: { type: 'value', ...axisStyle(theme) },
     yAxis: { type: 'category', data: sorted.map(row => row.name), ...axisStyle(theme) },
-    series: [{ type: 'bar', name, data: sorted.map(row => row.value), barMaxWidth: 18, itemStyle: { color: theme.primary, borderRadius: [0, 5, 5, 0] } }],
+    series: [{
+      type: 'bar',
+      name,
+      data: sorted.map(row => row.value),
+      barMaxWidth: 18,
+      itemStyle: { color: { ...fade(theme.primary, 'f0', '55'), x2: 1, y2: 0 }, borderRadius: [0, 5, 5, 0] },
+      label: { show: true, position: 'right', color: theme.text, fontSize: 11 },
+    }],
   }
 }
 
@@ -78,8 +91,8 @@ export function buildShareOption(theme: ChartTheme, rows: { name: string; value:
     textStyle: { color: theme.text },
     tooltip: { trigger: 'item', confine: true },
     legend: narrow
-      ? { orient: 'vertical', right: 0, top: 'center', itemGap: 10, itemWidth: 10, textStyle: { color: theme.text, fontSize: 11 } }
-      : { bottom: 0, type: 'scroll', textStyle: { color: theme.text } },
+      ? { orient: 'vertical', right: 0, top: 'center', icon: 'circle', itemGap: 10, itemWidth: 8, itemHeight: 8, textStyle: { color: theme.text, fontSize: 11 } }
+      : { bottom: 0, type: 'scroll', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { color: theme.text } },
     series: [{
       type: 'pie',
       radius: narrow ? ['46%', '68%'] : ['55%', '80%'],
@@ -159,7 +172,7 @@ export function buildFunnelOption(theme: ChartTheme, rows: { name: string; value
         return `${name}：${value}（占首级 ${((value / first) * 100).toFixed(1)}%）`
       },
     },
-    legend: { bottom: 0, type: 'scroll', textStyle: { color: theme.text } },
+    legend: { bottom: 0, type: 'scroll', icon: 'circle', itemWidth: 8, itemHeight: 8, textStyle: { color: theme.text } },
     series: [{ type: 'funnel', left: '8%', width: '84%', top: 8, bottom: 36, sort: 'descending', gap: 3, data: rows, label: { color: theme.text, formatter: '{b} {c}' }, labelLine: { lineStyle: { color: theme.line } } }],
   }
 }

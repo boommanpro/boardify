@@ -15,7 +15,7 @@ export function ChartCard({ title, description, action, table, children, footer 
   footer?: string
 }) {
   return (
-    <Card>
+    <Card className="transition-all hover:shadow-md">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
