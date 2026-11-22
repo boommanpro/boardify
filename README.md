@@ -26,10 +26,13 @@
 
 ## 在线演示
 
-示例工程维护于 `examples` 分支，自动构建并发布：
+示例工程维护于 `examples` 分支，自动构建并发布（[示例索引页](https://boommanpro.github.io/boardify/)）：
 
 - [电商单屏经营大盘](https://boommanpro.github.io/boardify/ecommerce/) — 省市区地图下钻，三分辨率适配
 - [全国农业数据大屏](https://boommanpro.github.io/boardify/agriculture/) — 16:9 定屏等比缩放，滚轮缩放平移
+- [运维监控看板](https://boommanpro.github.io/boardify/ops-monitor/) — 自动刷新、P50/P95 延迟、错误热力与分级告警
+- [销售增长分析看板](https://boommanpro.github.io/boardify/sales-growth/) — 转化漏斗、留存矩阵、用户分层气泡
+- [营销活动指挥大屏](https://boommanpro.github.io/boardify/command-center/) — midnight 配色、合成地图下钻、六维画像雷达
 
 ## 快速开始
 
